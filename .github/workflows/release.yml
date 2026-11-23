@@ -1,0 +1,35 @@
+# Pubblicando un tag "v1.0.1" crea la release con allegato assistentino.zip,
+# che è quello che i siti scaricano per aggiornarsi.
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: assistentino
+
+      - name: Controlla che il tag corrisponda alla versione del plugin
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          HEAD=$(grep -m1 -E "^\s*\*\s*Version:" assistentino/assistentino.php | awk '{print $NF}')
+          CONST=$(grep -m1 "ASSISTENTINO_VERSION" assistentino/assistentino.php | sed -E "s/.*'([0-9.]+)'.*/\1/")
+          echo "tag=$TAG intestazione=$HEAD costante=$CONST"
+          [ "$TAG" = "$HEAD" ] && [ "$TAG" = "$CONST" ]
+
+      - name: Prepara lo zip
+        run: zip -r assistentino.zip assistentino -x "assistentino/.git/*" "assistentino/.github/*" "assistentino/README.md" "assistentino/.gitignore"
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: assistentino.zip
+          generate_release_notes: true
