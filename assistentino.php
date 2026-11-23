@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Assistentino
  * Description:       Espone a Colibri, in sola lettura e con una chiave, lo stato del sito: versioni di WordPress e PHP, tema, plugin installati e aggiornamenti disponibili.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            Maddalena
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'ASSISTENTINO_VERSION', '1.0.0' );
+define( 'ASSISTENTINO_VERSION', '1.0.1' );
 define( 'ASSISTENTINO_FILE', __FILE__ );
 
 // Repository GitHub da cui arrivano gli aggiornamenti ("utente/repository").

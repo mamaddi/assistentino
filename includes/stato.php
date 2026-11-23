@@ -13,7 +13,18 @@ add_action( 'rest_api_init', function () {
 		'methods'             => 'GET',
 		'callback'            => 'assistentino_stato',
 		'permission_callback' => 'assistentino_permesso',
+		'show_in_index'       => false,   // non compare nell'elenco pubblico di /wp-json/
 	) );
+} );
+
+// toglie anche il gruppo "assistentino/v1" dall'elenco dei namespace di /wp-json/
+add_filter( 'rest_index', function ( $response ) {
+	$data = $response->get_data();
+	if ( isset( $data['namespaces'] ) && is_array( $data['namespaces'] ) ) {
+		$data['namespaces'] = array_values( array_diff( $data['namespaces'], array( 'assistentino/v1' ) ) );
+		$response->set_data( $data );
+	}
+	return $response;
 } );
 
 /**
