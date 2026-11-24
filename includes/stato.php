@@ -28,6 +28,26 @@ add_filter( 'rest_index', function ( $response ) {
 } );
 
 /**
+ * Alcuni plugin di sicurezza (o «Disable REST API») chiudono tutte le REST API a chi non
+ * ha fatto l'accesso, con il filtro rest_authentication_errors. Per la sola richiesta di
+ * Colibri con la chiave giusta togliamo quel blocco; tutto il resto resta chiuso.
+ */
+add_filter( 'rest_authentication_errors', function ( $result ) {
+	return assistentino_richiesta_di_colibri() ? true : $result;
+}, PHP_INT_MAX );
+
+function assistentino_richiesta_di_colibri() {
+	$uri   = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+	$route = isset( $GLOBALS['wp']->query_vars['rest_route'] ) ? (string) $GLOBALS['wp']->query_vars['rest_route'] : '';
+	if ( false === strpos( $route . ' ' . rawurldecode( $uri ), '/assistentino/v1/stato' ) ) {
+		return false;
+	}
+	$hash = (string) get_option( 'assistentino_key_hash', '' );
+	$key  = isset( $_SERVER['HTTP_X_ASSISTENTINO_KEY'] ) ? (string) wp_unslash( $_SERVER['HTTP_X_ASSISTENTINO_KEY'] ) : '';
+	return '' !== $hash && '' !== $key && hash_equals( $hash, hash( 'sha256', $key ) );
+}
+
+/**
  * Chiave giusta → passa. Chiave mancante o sbagliata → risponde come se il percorso non esistesse.
  */
 function assistentino_permesso( WP_REST_Request $request ) {

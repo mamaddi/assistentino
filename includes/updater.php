@@ -104,6 +104,13 @@ add_filter( 'plugins_api', function ( $result, $action, $args ) {
 	);
 }, 10, 3 );
 
+// «Verifica di nuovo» in Bacheca → Aggiornamenti: rileggi subito la release da GitHub
+add_action( 'load-update-core.php', function () {
+	if ( isset( $_GET['force-check'] ) && current_user_can( 'update_plugins' ) ) {
+		delete_site_transient( 'assistentino_release' );
+	}
+} );
+
 // dopo un aggiornamento, rileggi subito la release
 add_action( 'upgrader_process_complete', function () {
 	delete_site_transient( 'assistentino_release' );
