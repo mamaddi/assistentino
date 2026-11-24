@@ -73,8 +73,15 @@ add_filter( 'update_plugins_github.com', function ( $update, $plugin_data, $plug
 		'version' => $r['version'],
 		'url'     => $r['url'],
 		'package' => $r['package'],
+		'icons'   => assistentino_icons(),
 	);
 }, 10, 3 );
+
+// logo del plugin (schermata Aggiornamenti e finestra «Visualizza dettagli»)
+function assistentino_icons() {
+	$svg = plugins_url( 'assets/icon.svg', ASSISTENTINO_FILE );
+	return array( 'svg' => $svg, '1x' => $svg, '2x' => $svg, 'default' => $svg );
+}
 
 // finestra «Visualizza dettagli» nella pagina Plugin
 add_filter( 'plugins_api', function ( $result, $action, $args ) {
@@ -89,6 +96,7 @@ add_filter( 'plugins_api', function ( $result, $action, $args ) {
 		'author'        => 'Maddalena',
 		'homepage'      => 'https://github.com/' . ASSISTENTINO_GITHUB_REPO,
 		'download_link' => $r ? $r['package'] : '',
+		'icons'         => assistentino_icons(),
 		'sections'      => array(
 			'description' => 'Espone a Colibri, in sola lettura e con una chiave, lo stato del sito.',
 			'changelog'   => $r && $r['notes'] ? wpautop( esc_html( $r['notes'] ) ) : 'Nessuna nota.',

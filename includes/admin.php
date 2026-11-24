@@ -60,7 +60,7 @@ function assistentino_pagina() {
 	$endpoint  = rest_url( 'assistentino/v1/stato' );
 	?>
 	<div class="wrap">
-		<h1>Assistentino</h1>
+		<h1 style="display:flex;align-items:center;gap:.5rem"><img src="<?php echo esc_url( plugins_url( 'assets/icon.svg', ASSISTENTINO_FILE ) ); ?>" alt="" width="40" height="40" style="border-radius:8px">Assistentino</h1>
 		<p>Permette a Colibri di leggere lo stato di questo sito: versioni di WordPress e PHP, tema, plugin installati e aggiornamenti disponibili. Non può modificare niente.</p>
 
 		<?php if ( isset( $_GET['revocata'] ) ) : ?>
